@@ -1,0 +1,7 @@
+const names=['Иванов Сергей Петрович','Петров Алексей Игоревич','Сидоров Максим Олегович','Кузнецов Андрей Викторович','Смирнов Дмитрий Павлович','Попов Николай Сергеевич','Васильев Артём Романович'];
+export const demoData={
+ legalEntities:[{id:'kirasa',name:'ООО «ЧОО Кираса»',objects:[{id:'tnt',name:'ТНТ Майнинг',inspection:'12.08.2026',posts:[{id:'kp1',name:'КПП №1'},{id:'warehouse',name:'Склад ГСМ'}]},{id:'port',name:'Магаданский порт',inspection:'08.08.2026',posts:[{id:'gate',name:'Главные ворота'}]}]},{id:'shield',name:'ООО «Щит ДВ»',objects:[{id:'office',name:'Административный комплекс',inspection:'04.08.2026',posts:[{id:'lobby',name:'Центральный вход'}]}]}],
+ templates:[{id:'daynight',name:'День / ночь / 48'},{id:'daily',name:'Суточный пост 1/3'},{id:'flex',name:'Гибкий усиленный'}],
+ guards:names.map((name,i)=>({id:`g${i+1}`,name,status:i===6?'Кандидат':'Действующий',engagement:i%3===0?'Неофициально':'Официально',rank:i%2?'4 разряд':'6 разряд',phone:`+7 914 000-0${i+1}-0${i+1}`,experience:`${i+1} г. ${i+2} мес.`,medical:i===5?'До 20.09.2026':'Действует',license:i===6?'На оформлении':'Действует',note:i===2?'Предпочтительны дневные смены':'Нарушений не зафиксировано'})),
+ rates:{mode:'HOURLY',amount:520,shiftAmount:6200,version:'FIN-2026-08-02'}
+};

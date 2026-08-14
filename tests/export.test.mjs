@@ -1,0 +1,2 @@
+import test from 'node:test'; import assert from 'node:assert/strict'; import {buildWorkbookData} from '../src/export.mjs';
+test('export prepares three reconciled sheets',()=>{const x=buildWorkbookData({month:'2026-08',assignments:[],guards:[{id:'g1',name:'Охранник 1'}],rates:{mode:'HOURLY',amount:500},bonuses:{g1:{amount:1000,reason:'Подмена'}}});assert.deepEqual(Object.keys(x),['График','Расчёт ЗП','Справочники']);assert.equal(typeof x['Расчёт ЗП'][1][5],'number')});

@@ -1,0 +1,1 @@
+export class LocalScheduleRepository{constructor(storage=localStorage){this.storage=storage} key(m){return`arkhangel-schedule:${m}`} load(m){const v=this.storage.getItem(this.key(m));return v?JSON.parse(v):null} save(s){this.storage.setItem(this.key(s.month),JSON.stringify(s));return s} reset(m){this.storage.removeItem(this.key(m))}}
