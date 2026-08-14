@@ -1,9 +1,10 @@
 import test from 'node:test'; import assert from 'node:assert/strict';
-import {daysInMonth,shiftHours,calculateGuardPayroll,calculatePayrollSummary,assessWorkload,canEditSchedule} from '../src/domain.mjs';
+import {daysInMonth,shiftHours,calculateGuardPayroll,calculatePayrollSummary,assessWorkload,canEditSchedule,reopenScheduleDraft} from '../src/domain.mjs';
 test('calendar respects month length',()=>{assert.equal(daysInMonth(2024,2),29);assert.equal(daysInMonth(2025,2),28);assert.equal(daysInMonth(2026,4),30);assert.equal(daysInMonth(2026,8),31)});
 test('shift types map to hours',()=>{for(const h of [6,8,12,24]) assert.equal(shiftHours(String(h)),h)});
 test('payroll supports hourly, shifts and bonus',()=>{assert.deepEqual(calculateGuardPayroll([{hours:12},{hours:8}],{mode:'HOURLY',amount:500},2000),{hours:20,shifts:2,base:10000,bonus:2000,total:12000});assert.equal(calculateGuardPayroll([{hours:12}],{mode:'SHIFT',amount:6000},0).total,6000)});
 test('workload reports fatigue risk',()=>{assert.equal(assessWorkload(Array(9).fill({hours:24})).level,'HIGH');assert.equal(assessWorkload([{hours:8}]).level,'OK')});
 test('approved schedule is locked',()=>assert.equal(canEditSchedule({status:'APPROVED'}),false));
+test('approved demo schedule can be reopened as a draft without losing assignments',()=>{const approved={status:'APPROVED',approvedAt:'2026-08-14T10:00:00.000Z',assignments:[{guardId:'g1',day:1,hours:12}]};const draft=reopenScheduleDraft(approved);assert.equal(draft.status,'DRAFT');assert.equal(draft.approvedAt,undefined);assert.deepEqual(draft.assignments,approved.assignments);assert.notEqual(draft,approved)});
 test('selected per-shift price drives payroll regardless of duration',()=>{const p=calculateGuardPayroll([{hours:6},{hours:24}],{mode:'SHIFT',amount:7500},0);assert.equal(p.base,15000);assert.equal(p.total,15000)});
 test('payroll summary totals every guard and detects budget excess',()=>{const summary=calculatePayrollSummary([{id:'g1'},{id:'g2'}],[{guardId:'g1',hours:12},{guardId:'g2',hours:8}],{mode:'SHIFT',amount:7500},{g2:{amount:1000}},15000);assert.equal(summary.rows.length,2);assert.equal(summary.total,16000);assert.equal(summary.overBudget,true)});
